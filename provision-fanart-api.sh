@@ -58,6 +58,11 @@ case $i in
 esac
 done
 
+if [[ -z ${APIKEY} ]]
+	echo "API Key required. Aborting"
+	exit 1
+fi
+
 echo "Provisioning the fanart.tv API"    
 echo "APIKEY  = ${APIKEY}"
 
