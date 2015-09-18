@@ -104,6 +104,7 @@ else
 	ip link add $VIFACE link $IFACE type macvlan mode bridge
 	ip address add $IP/24 broadcast $GATEWAY dev $VIFACE
 	INTIP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' $CID) # Store as $INTIP
+	iptables -t nat -N BRIDGE-$VIFACE
 	iptables -t nat -A PREROUTING -p all -d $IP -j BRIDGE-$VIFACE
 	iptables -t nat -A OUTPUT -p all -d $IP -j BRIDGE-$VIFACE
 	iptables -t nat -A BRIDGE-$VIFACE -p all -j DNAT --to-destination $INTIP
