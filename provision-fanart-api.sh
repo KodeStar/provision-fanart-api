@@ -28,16 +28,13 @@ done
 echo "Provisioning the fanart.tv API"    
 echo "APIKEY  = ${APIKEY}"
 
-hash curl 2>/dev/null || { echo >&2 "curl is a requirement, please install before running this script"; exit 1; }
+command -v curl >/dev/null 2>&1 || { echo >&2 "curl is a requirement, please install before running this script"; exit 1; }
 
 # Check if Docker is installed
-DOCKER=$(docker -v >/dev/null 2>&1)
-if [ -z "$DOCKER" ]; then
-    echo "Docker not installed, installing now:"
+command -v docker >/dev/null 2>&1 || {
+	echo "Docker not installed, installing now:"
     curl -sSL https://get.docker.com/ | sh
-fi
-
-
+}
 
 
 if [ ${MASTER} = "YES" ]; then
