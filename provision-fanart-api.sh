@@ -28,17 +28,13 @@ done
 echo "Provisioning the fanart.tv API"    
 echo "APIKEY  = ${APIKEY}"
 
-CURL=$(curl -v >/dev/null 2>&1)
-if [ -z "$CURL" ]; then
-    echo "curl is a requirement, please install before running this script"
-    exit
-fi
+hash curl 2>/dev/null || { echo >&2 "curl is a requirement, please install before running this script"; exit 1; }
 
 # Check if Docker is installed
 DOCKER=$(docker -v >/dev/null 2>&1)
 if [ -z "$DOCKER" ]; then
     echo "Docker not installed, installing now:"
-    apt-get -t jessie-backports install "docker.io"
+    curl -sSL https://get.docker.com/ | sh
 fi
 
 
