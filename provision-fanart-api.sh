@@ -3,6 +3,7 @@ MASTER=NO
 HTTPPORT=80
 HTTPSPORT=443
 NAME=""
+IFACE="eth0"
 for i in "$@"
 do
 case $i in
@@ -26,8 +27,13 @@ case $i in
     IP="${i#*=}"
     shift # past argument=value
     ;;
+    -f=*|--interface=*)
+    IFACE="${i#*=}"
+    shift # past argument=value
+    ;;
     -n=*|--name=*)
-    NAME="--name=${i#*=}"
+    NAME="${i#*=}"
+    CREATENAME="--name=$NAME"
     shift # past argument=value
     ;;
     -s=*|--serverip=*)
@@ -49,6 +55,7 @@ case $i in
     echo "  -g | --gateway # Optional / Mandatory if --ip is set, gateway to use - on ovh this is the main ip with the last octet as 254 on online.net last octet should be 1"
     echo "  -m | --master # Optional - no value"
     echo "  -n | --name # Optional - Docker container name, if not set a random name will be used"
+    echo "  -f | --interface # Optional - interface to use, if not selected eth0 is used"
     echo "  -h | --help # this help page"
     exit
     ;;
@@ -81,7 +88,8 @@ if [ ${MASTER} = "YES" ]; then
 else
      echo "Installing Client API"
      # Do stuff
-     CID=$(docker run $NAME -v $CONFIG:/config -v /etc/localtime:/etc/localtime:ro -p $HTTPPORT:80 -p $HTTPSPORT:443 -e "APIKEY=$APIKEY" linuxserver/fanart.api)
+     docker create $CREATENAME -v $CONFIG:/config -v /etc/localtime:/etc/localtime:ro -p $HTTPPORT:80 -p $HTTPSPORT:443 -e "APIKEY=$APIKEY" linuxserver/fanart.api
+     CID=$(docker start $NAME)
 fi
 
 if [[ -z $IP ]]; then
