@@ -27,11 +27,22 @@ done
 
 echo "Provisioning the fanart.tv API"    
 echo "APIKEY  = ${APIKEY}"
-# Check if Docker is installed
-DOCKER=$(docker -v)
-if [ $DOCKER = "bash: docker: command not found" ]; then
-	echo "not installed"
+
+CURL=$(curl -v >/dev/null 2>&1)
+if [ -z "$CURL" ]; then
+    echo "curl is a requirement, please install before running this script"
+    exit
 fi
+
+# Check if Docker is installed
+DOCKER=$(docker -v >/dev/null 2>&1)
+if [ -z "$DOCKER" ]; then
+    echo "Docker not installed, installing now:"
+    apt-get -t jessie-backports install "docker.io"
+fi
+
+
+
 
 if [ ${MASTER} = "YES" ]; then
     echo "Installing Master API"
