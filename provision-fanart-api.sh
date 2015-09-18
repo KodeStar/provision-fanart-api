@@ -58,7 +58,7 @@ case $i in
 esac
 done
 
-if [[ -z ${APIKEY} ]]
+if [[ -z ${APIKEY} ]]; then
 	echo "API Key required. Aborting"
 	exit 1
 fi
@@ -84,7 +84,7 @@ else
      CID=$(docker run $NAME -v $CONFIG:/config -v /etc/localtime:/etc/localtime:ro -p $HTTPPORT:80 -p $HTTPSPORT:443 -e "APIKEY=$APIKEY" linuxserver/fanart.api)
 fi
 
-if [[ -z $IP ]]
+if [[ -z $IP ]]; then
 	echo "Finished installing"
 else
 	# This bit doesn't work because I don't know how to do it
